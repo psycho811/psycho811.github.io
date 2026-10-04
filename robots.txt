@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://psycho811.github.io/personal_page/sitemap.xml
+Sitemap: https://psycho811.github.io/sitemap.xml
