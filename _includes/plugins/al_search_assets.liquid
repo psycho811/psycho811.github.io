@@ -1,0 +1,10 @@
+{% comment %}
+  Keep the site's News section out of the search shortcuts.
+{% endcomment %}
+{% al_search_assets %}
+<script>
+  const searchMenu = document.querySelector('ninja-keys');
+  if (searchMenu) {
+    searchMenu.data = searchMenu.data.filter((item) => !item.id.startsWith('news-'));
+  }
+</script>

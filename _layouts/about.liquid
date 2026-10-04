@@ -1,0 +1,130 @@
+---
+layout: default
+---
+<style>
+  @font-face {
+    font-family: 'Source Serif 4';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('{{ "/assets/fonts/source-serif-4-regular.ttf" | relative_url }}') format('truetype');
+  }
+  .post .post-header {
+    margin-bottom: 3rem;
+  }
+  .post .profile {
+    width: 225px;
+    max-width: 40%;
+  }
+  .post .about-biography > p {
+    max-width: 650px;
+  }
+</style>
+<div class="post">
+  {% if page.profile %}
+    <div class="profile float-{% if page.profile.align == 'left' %}left{% else %}right{% endif %}">
+      {% if page.profile.image %}
+        {% assign profile_image_path = page.profile.image | prepend: 'assets/img/' %}
+        {% if page.profile.image_circular %}
+          {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
+        {% else %}
+          {% assign profile_image_class = 'img-fluid z-depth-1
+      rounded' %}
+        {% endif %}
+        {% capture sizes %}(min-width: 563px) 225px, 40vw{% endcapture %}
+        {% assign profile_image_alt = page.profile.image_alt | default: page.profile.image %}
+        {%
+          include figure.liquid loading="eager" path=profile_image_path class=profile_image_class sizes=sizes alt=profile_image_alt
+          cache_bust=true
+        %}
+      {% endif %}
+      {% if page.profile.more_info %}
+        <div class="more-info">{{ page.profile.more_info }}</div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <header class="post-header">
+    <h1 class="post-title">
+      {% if page.chinese_name %}
+        <span style="font-family: 'Source Serif 4', Georgia, serif; font-weight: 400">{{ page.display_name | escape }}</span>
+        <span style="font-size: 0.5em">（{{ page.chinese_name | escape }}）</span>
+      {% elsif site.title == 'blank' %}
+        <span class="font-weight-bold">{{ site.first_name }}</span> {{ site.middle_name }}
+        {{ site.last_name }}
+      {% else %}
+        {{ site.title }}
+      {% endif %}
+    </h1>
+    {% if page.subtitle %}
+      <p class="desc">{{ page.subtitle }}</p>
+    {% endif %}
+  </header>
+
+  <article>
+    <div class="clearfix about-biography" style="font-family: 'Source Serif 4', Georgia, serif; font-weight: 400">
+      {{ content }}
+      {% if page.contact_links %}
+        <p class="contact-links" style="text-align: center; margin-top: 2.5rem">
+          {% if site.data.socials.email %}
+            <a href="mailto:{{ site.data.socials.email | escape }}">Email</a>
+          {% else %}
+            <span style="color: var(--global-theme-color)">Email</span>
+          {% endif %}
+          /
+          {% if site.data.socials.scholar_userid %}
+            <a href="https://scholar.google.com/citations?user={{ site.data.socials.scholar_userid | uri_escape }}">Google Scholar</a>
+          {% else %}
+            <span style="color: var(--global-theme-color)">Google Scholar</span>
+          {% endif %}
+        </p>
+      {% endif %}
+    </div>
+
+    <!-- News -->
+    {% if page.announcements and page.announcements.enabled %}
+      <h2 id="news" style="margin-bottom: 1.5rem">
+        <a href="#news" style="color: inherit; font-weight: 400; text-decoration: underline; text-underline-offset: 0.15em">News</a>
+      </h2>
+      {% include news.liquid limit=true %}
+    {% endif %}
+
+    <!-- Latest posts -->
+    {% if page.latest_posts and page.latest_posts.enabled %}
+      <h2>
+        <a href="{{ '/blog/' | relative_url }}" style="color: inherit">latest posts</a>
+      </h2>
+      {% include latest_posts.liquid %}
+    {% endif %}
+
+    <!-- Selected papers -->
+    {% if page.selected_papers %}
+      <h2 id="publications">
+        <a
+          href="{{ '/publications/' | relative_url }}"
+          style="color: inherit; font-weight: 400; text-decoration: underline; text-underline-offset: 0.15em"
+        >
+          Publications
+        </a>
+      </h2>
+      {% include selected_papers.liquid %}
+    {% endif %}
+
+    <!-- Social -->
+    {% if page.social %}
+      <div class="social">
+        <div class="contact-icons">{% social_links %}</div>
+
+        <div class="contact-note">{{ site.contact_note }}</div>
+      </div>
+    {% endif %}
+
+    {% if site.newsletter and site.newsletter.enabled and site.footer_fixed %}
+      {% if site.plugins contains 'al_newsletter' %}
+        {% include plugins/al_newsletter_form_center_margin.liquid %}
+      {% else %}
+        {% include newsletter.liquid center=true %}
+      {% endif %}
+    {% endif %}
+  </article>
+</div>

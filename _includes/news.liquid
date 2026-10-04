@@ -1,0 +1,32 @@
+<div class="news" style="max-width: 500px">
+  {% if site.news != blank %}
+    {% assign news_size = site.news | size %}
+    {% assign news = site.news | reverse %}
+    {% if include.limit and page.announcements.limit %}
+      {% assign news_limit = page.announcements.limit %}
+    {% else %}
+      {% assign news_limit = news_size %}
+    {% endif %}
+    <ul style="list-style: disc; padding-left: 1.25rem; margin: 0 0 1.5rem">
+      {% for item in news limit: news_limit %}
+        <li id="news-{{ item.slug }}" style="margin-bottom: 0.5rem; line-height: 1.5">
+          {% if item.display_date %}
+            {{ item.display_date }}:
+          {% else %}
+            {{ item.date | date: '%b %d, %Y' }}:
+          {% endif %}
+          {% if item.inline %}
+            {{ item.content | markdownify | remove: '<p>' | remove: '</p>' | emojify }}
+          {% else %}
+            <details>
+              <summary class="news-title">{{ item.title }}</summary>
+              <div>{{ item.content | markdownify | emojify }}</div>
+            </details>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No news so far...</p>
+  {% endif %}
+</div>
